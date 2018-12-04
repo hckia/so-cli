@@ -1,0 +1,16 @@
+# dependencies
+/node_modules
+.env
+# backups
+/images
+/results
+images.json
+tags.json
+posts.json
+users.json
+comments.json
+example-output.txt
+regexSample.json
+regextester.js
+test.md
+pagelyoverflow.code-workspace
