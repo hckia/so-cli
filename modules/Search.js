@@ -28,12 +28,43 @@ function searchHanlder(searchArg){
     for (let i = 0; i < objects.length; i++) {
         //should consider modularizing this since the paylods will be identical. Only the control Statements will be unique.
         //the condition statement here should be a function where we can loop through the objects value keys and compare. it should only return a boolean
-        if (objects[i].body == searchParam && objects[i].postType == 'question') {
-            questionCount++;
-            //add FormatPayload function here
-            queryResults = payload.payloadFormatter(queryResults, objects[i]);
-            answerCount++;
+        for(key in objects[i]){
+            if (key == 'creationDate') {
+                if (objects[i].creationDate.slice(0, 10) == searchParam.slice(0, 10) && objects[i].postType == 'question') {
+                    let questionPosition = objects.map(object => { return object.id; }).indexOf(objects[i].parentId);
+                    queryResults = payload.payloadFormatter(queryResults, objects[questionPosition], objects, answerCount);
+                    answerCount = queryResults[queryResults.length - 1].answers.length + answerCount;
+                }
+            } else if (objects[i][key].toString().toLowerCase().includes(searchParam.toLowerCase()) && objects[i].postType == 'question') {
+                questionCount++;
+                //add FormatPayload function here
+                queryResults = payload.payloadFormatter(queryResults, objects[i], objects, answerCount);
+                (!queryResults[queryResults.length - 1].answers.length == 0) ? answerCount = queryResults[queryResults.length - 1].answers.length + answerCount : console.log("no answers");
+            }
         }
+    }
+    if (questionCount == 0) {
+        console.log('no questions found. Checking again for individual Answers...');
+        for (let i = 0; i < objects.length; i++) {
+            //should consider modularizing this since the paylods will be identical. Only the control Statements will be unique.
+            for (key in objects[i]) {
+                if (key == 'creationDate'){
+                    if (objects[i].creationDate.slice(0, 10) == searchParam.slice(0, 10) && objects[i].postType == 'answer') { 
+                        let questionPosition = objects.map(object => { return object.id; }).indexOf(objects[i].parentId);
+                        queryResults = payload.payloadFormatter(queryResults, objects[questionPosition], objects, answerCount);
+                        answerCount = queryResults[queryResults.length - 1].answers.length + answerCount;           
+                    }
+                } else if (objects[i][key].toString().toLowerCase().includes(searchParam.toLowerCase()) && objects[i].postType == 'answer') {
+                    //let questionRelatedToAnswer = objects.find(object => object.id == objects[i].parentId);
+                    let questionPosition = objects.map(object => { return object.id; }).indexOf(objects[i].parentId);
+                    queryResults = payload.payloadFormatter(queryResults, objects[questionPosition], objects, answerCount);
+                    answerCount = queryResults[queryResults.length - 1].answers.length + answerCount;
+                }
+            }
+        }
+        console.log(`----------
+NOTE: Questions contained in this specific Result are not from the Specified date, but are included due to the fact that they are related to An Answer on the specified date.
+----------`);
     }
     // since index 0 includes searchArguments, we need to subtract one from answerCount.
     /* 

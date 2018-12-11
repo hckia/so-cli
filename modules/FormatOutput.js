@@ -155,6 +155,7 @@ module.exports.formatOutput = (queryResults, resultFileName) => {
     } else {
         for (let i = 1; i < queryResults.length; i++) {
             let currentObj = queryResults[i];
+            //console.log(currentObj.title);
             formatText(currentObj, searchArg, logStream, resultFileName);
         }
     }
