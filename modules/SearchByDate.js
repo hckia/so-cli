@@ -21,8 +21,7 @@ function dateHandler(searchArg) {
         let resultFileName = `./results/${dateGiven.slice(0,10)}results${theDate.getMilliseconds()}.${resultFileType}`;
         let queryResults = [searchArg];
         let questionCount = 0;
-        //since index 0 includes searchArguments, we need to begin answerCount at 1
-        let answerCount = 1;
+        let answerCount = 0;
         for (let i = 0; i < objects.length; i++) {
             //should consider modularizing this since the paylods will be identical. Only the control Statements will be unique.
             if (objects[i].creationDate.slice(0, 10) == dateGiven.slice(0, 10) && objects[i].postType == 'question') {

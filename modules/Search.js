@@ -20,12 +20,14 @@ function searchHanlder(searchArg){
         resultFileType = 'txt'
     }
     //instead of slice, we need to remove any spaces in the argument...
-    let resultFileName = `./results/${searchParam}results${theDate.getMilliseconds()}.${resultFileType}`;
+    // need to had control statement that controls the size of the filename.
+    let resultFileName = `./results/${searchParam.replace(/\s/g, '')}results${theDate.getMilliseconds()}.${resultFileType}`;
     let queryResults = [searchArg];
     let questionCount = 0;
-    //since index 0 includes searchArguments, we need to begin answerCount at 1
-    let answerCount = 1;
+    let answerCount = 0;
     for (let i = 0; i < objects.length; i++) {
+        // need to make includes more dynamic. use split to roll through each word in the search parameter. https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/split
+        // we need it to ignore common prefixes, adverbs, pronouns as well.
         //should consider modularizing this since the paylods will be identical. Only the control Statements will be unique.
         //the condition statement here should be a function where we can loop through the objects value keys and compare. it should only return a boolean
         for(key in objects[i]){

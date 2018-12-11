@@ -15,17 +15,13 @@ const optionDefinitions = [
 ]
 
 const options = commandLineArgs(optionDefinitions)
-console.log(options)
+//console.log(options)
 const args = ['search', 'searchById', 'searchByTitle', 'postType', 'creationDate'];
 const chosenArg = args.find(arg => (arg in options));
 
-//console.log(chosenArg);
-//console.log(options.html);
-//console.log(options.markdown);
 if ((options.html && options.markdown)){
     console.log('Please only choose html or markdown flag');
     process.exit(1);
 }
 
-//(options.html || options.markdown) ? console.log('word') : console.log('false');
 srchRouter.route(chosenArg, options);
