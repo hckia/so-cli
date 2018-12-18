@@ -138,11 +138,22 @@ ParentID: ${answers[j].parentId}
     }
 }
 
-module.exports.formatOutput = (queryResults, resultFileName) => {
+module.exports.formatOutput = (queryResults, resultFileName, exportall) => {
+    exportall = exportall || false;
     let searchArg = queryResults[0];
-    if (searchArg.markdown) TurnDownService = require('turndown');
-    let logStream = fs.createWriteStream(resultFileName, { 'flags': 'a' });
-    if (searchArg.html) {
+    if (searchArg.markdown || exportall) TurnDownService = require('turndown');
+    let logStream = (!exportall) ? fs.createWriteStream(resultFileName, { 'flags': 'a' }) : '';
+    if (exportall) {
+        for (let i = 1; i < queryResults.length; i++) {
+            let currentObj = queryResults[i];
+            //console.log(currentObj.title.replace(/\s/g, ''));
+            // wow fix this regex scrub :)
+            let resultFileName = `./backups/${currentObj.title.replace(/\s/g, '').replace("[^0-9a-zA-Z]+", '').replace(/[()#.:?/'"]+/g, '')}.md`
+            logStream = fs.createWriteStream(resultFileName, { 'flags': 'a' });
+            formatMarkdown(currentObj, searchArg, logStream, resultFileName);
+        }        
+    }
+    else if (searchArg.html) {
         for (let i = 1; i < queryResults.length; i++) {
             let currentObj = queryResults[i];
             formatHtml(currentObj, searchArg, logStream, resultFileName);

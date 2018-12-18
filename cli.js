@@ -5,7 +5,8 @@ const srchRouter = require('./modules/SrchRouter');
 
 const optionDefinitions = [
     { name: 'search', alias: 's', type: String, defaultOption: true },
-    { name: 'verbose', alias: 'v', type: Boolean, defaultValue: false},
+    { name: 'exportdocs', type: Boolean },
+    { name: 'verbose', alias: 'v', type: Boolean},
     { name: 'html', type: Boolean },
     { name: 'markdown', type: Boolean },
     { name: 'searchById', alias: 'i', type: Number },
@@ -14,9 +15,8 @@ const optionDefinitions = [
     { name: 'creationDate', alias: 'd', type: date => new Date(date) },
 ]
 
-const options = commandLineArgs(optionDefinitions)
-//console.log(options)
-const args = ['search', 'searchById', 'searchByTitle', 'postType', 'creationDate'];
+const options = commandLineArgs(optionDefinitions);
+const args = ['search', 'exportdocs', 'searchById', 'searchByTitle', 'postType', 'creationDate'];
 const chosenArg = args.find(arg => (arg in options));
 
 if ((options.html && options.markdown)){
